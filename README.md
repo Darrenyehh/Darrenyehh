@@ -1,2 +1,1 @@
-Hello I am Darren D who is an aspiring programmer!
-Everything I do is for fun and feel free to borrow my code or check it out!
+Aspiring Software Engineer, feel free to take a look or use at any of my projects.
