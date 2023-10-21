@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+
+# Load the dataset
+student_data = pd.read_csv("student_data.csv")
+
+# Splitting data into features and target
+X = student_data[['Hours_Studied', 'Review_Session']]
+y = student_data['Results']
+
+# Fit a logistic regression model
+log_reg = LogisticRegression()
+log_reg.fit(X, y)
+
+# Calculate decision boundary for logistic regression with multiple features
+def decision_boundary(review_session, coef, intercept):
+    return (-coef[1] * review_session - intercept) / coef[0]
+
+# Calculate decision boundaries for both categories of Review_Session
+db_no_review = decision_boundary(0, log_reg.coef_[0], log_reg.intercept_[0])
+db_with_review = decision_boundary(1, log_reg.coef_[0], log_reg.intercept_[0])
+
+# Plotting the data and the decision boundaries
+colors = {0:'red', 1:'blue'}
+labels = {0:'No Review Session', 1:'Attended Review Session'}
+plt.figure(figsize=(10,6))
+
+for label, color in colors.items():
+    subset = student_data[student_data['Review_Session'] == label]
+    plt.scatter(subset['Hours_Studied'], subset['Results'], c=color, label=labels[label], s=50, alpha=0.6)
+
+# Plot decision boundaries
+plt.axhline(0.5, color='black', xmin=db_no_review, xmax=db_with_review, linestyle='--', label="Decision Boundary (No Review)")
+plt.axhline(0.5, color='green', xmin=db_with_review, linestyle='--', label="Decision Boundary (With Review)")
+
+plt.title("Hours Studied vs. Results with Decision Boundaries")
+plt.xlabel("Hours Studied")
+plt.ylabel("Results (Passed=1, Failed=0)")
+plt.legend()
+plt.ylim(-0.1, 1.1)
+plt.show()
